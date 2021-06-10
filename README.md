@@ -25,7 +25,7 @@ stored as TEXTFILE;
 Load Data
 
 ```sql
-load data inpath '/FileStore/tables/access.csv' into table hive_access;
+load data [local] inpath '/FileStore/tables/access.csv' into table hive_access;
 ```
 
 Insert
