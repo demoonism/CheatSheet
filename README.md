@@ -66,3 +66,21 @@ group by a.sid
 having shuxue > yuwen
 ```
 
+
+
+3. Python
+
+File I/O
+
+```python
+# Read
+with open("welcome.txt") as file:
+
+   data = file.read()
+   
+# Write
+with open('output.txt', 'w') as file:  # Use file to refer to the file object
+
+    file.write('Hi there!')
+    
+```
