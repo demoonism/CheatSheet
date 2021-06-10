@@ -84,3 +84,17 @@ with open('output.txt', 'w') as file:  # Use file to refer to the file object
     file.write('Hi there!')
     
 ```
+
+list comprehension
+
+```python
+
+#if else has to go before the for clause, but just if can go after
+correct: [len(i) if len(i) > 70 else 0 for i in data]
+correct: [len(i) for i in data if len(i) > 70]
+
+#cannt have if else after or just if before.
+wrong: [len(i) for i in data if len(i) > 70 else 0]
+wrong: [len(i) if len(i) > 70 for i in data ]
+
+```
