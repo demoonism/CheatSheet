@@ -53,10 +53,16 @@ VALUES (0, 'new_record', 1);
 
 alter table sample_table add partition (day=date '2017-03-03');
 
-INSERT OVERWRITE TABLE demo_tab PARTITION (land)
-SELECT stadt, geograph_breite, id, t.country,t.id as land
-FROM demo_stg t;
 
+CREATE TABLE demo_tab (
+month string,
+sales STRING
+)
+PARTITIONED BY (name string);
+
+INSERT OVERWRITE TABLE demo_tab PARTITION (name)
+SELECT month, sales, name
+FROM stores t;
 
 ```
 Write
@@ -146,6 +152,13 @@ lead(col, n, default): skip last n row
 
 SELECT name, month, count, dense_rank() OVER(PARTITION BY name ORDER BY count desc) ranks
 FROM testTable
+
+SELECT name,class,s, sum(s)over( order by s range between 2 preceding and 2 following) mm from t2
+select name,class,s, sum(s)over(order by s rows between 2 preceding and 2 following) mm from t2
+
+over（order by salary  range between unbounded preceding and unbounded following）或者
+over（order by salary  rows between unbounded preceding and unbounded following）：窗口不做限制
+
 
 ```
 Ordering
@@ -252,6 +265,18 @@ df5 = df4.groupBy(["a.uname","a.umonth", "a.num"]).agg(sum('b.num').alias("total
 
 df4 = df3.alias("a").join(df3.alias("b"), df3.name == df3.name, 'inner')
 
+
+# Window
+
+windowSpec = \
+  Window \
+    .partitionBy(...) \
+    .orderBy(...)
+# Defines a Window Specification with a ROW frame.
+windowSpec.rowsBetween(start, end)
+# Defines a Window Specification with a RANGE frame.
+windowSpec.rangeBetween(start, end)
+    
 
 ```
 
