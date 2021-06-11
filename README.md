@@ -66,7 +66,25 @@ from
   from course c) a
 group by a.sid
 having shuxue > yuwen
+
+
+SELECT
+sid,
+MAX(CASE
+WHEN course = 'yuwen' THEN score
+ELSE 0
+END) AS yuwen,
+
+MAX(CASE
+WHEN course='shuxue' THEN score
+ELSE 0
+END)  as shuxue
+
+FROM course
+GROUP BY sid
+HAVING shuxue > yuwen
 ```
+
 
 COALESCE
 ```sql
@@ -165,9 +183,16 @@ df = spark.read.csv("path", inferSchema = True, header = True)
 df = spark.table("hive_access")
 df = spark.sql("select * from hive_access")
 
-Write
+#Write
 df2.createOrReplaceTempView("test")
 df2.write.saveAsTable("testTable")
+
+#Case
+df.withColumn("shuxue", when(col("course") == 'shuxue', col("score")).otherwise("0")) \
+  .withColumn("yuwen", when(col("course") == 'yuwen', col("score")).otherwise("0"))  \
+  .groupby("sid").agg(max("shuxue").alias("shuxue"), max("yuwen").alias("yuwen")) \
+  .where(col("shuxue") > col("yuwen")) \
+  .show()
 
 
 #Rename
