@@ -56,14 +56,21 @@ from
   when c.course = 'yuwen' then c.score
   when c.course = 'shuxue' then '3'
   end as yuwen,
-
+  
   case 
-  when c.course = 'shuxue' then c.score
-  when c.course = 'yuwen' then 0
-  end as shuxue
+  when A is not null and A <> '' then A
+  when B is not null and B <> '' then B
+  else C
+  end as score  
   from course c) a
 group by a.sid
 having shuxue > yuwen
+```
+
+COALESCE
+```sql
+select COALESCE(comm, 0) from emp;
+-- replace null with 0.
 ```
 
 With Statement
@@ -81,6 +88,44 @@ SELECT *
 FROM t1, t2
 ```
 
+Casting
+
+```sql
+select cast('2147483648' as bigint);
+select cast('2147483648' as int);
+```
+
+# Ordering
+Order by: global sort
+Sort by: sort within reducer
+Distribute by: define how to partition to reducer, often use with sort by.
+Cluster by: distributed + sort by column.
+
+```sql
+select name from students 
+where marks > 75 
+order by substring(name, -2) asc, id asc
+```
+
+# String Functions:
+CONCAT('hadoop','-','hive') returns 'hadoop-hive'
+CONCAT_WS('-','hadoop','hive') returns 'hadoop-hive'
+FIND_IN_SET('ha','hao,mn,hc,ha,hef') returns 4
+LENGTH('hive') returns 4
+LOWER('HiVe') returns 'hive'
+UPPER('HiVe') returns 'HIVE'
+LPAD('hive',6,'v') returns 'vvhive'
+LTRIM('   hive') returns 'hive'
+REPEAT('hive',2) returns 'hivehive'
+RPAD('hive',6,'v') returns 'hivevv'
+REVERSE('hive') returns 'evih'
+LTRIM('hive   ') returns 'hive'
+SPACE(4) returns '    '
+SPLIT('hive:hadoop',':') returns ["hive","hadoop"]
+SUBSTR('hadoop',4,2) returns 'oo'
+SUBSTR('hadoop',4) returns 'oop'
+SUBSTR('hadoop',-1) returns 'p'
+TRIM('   hive   ') returns 'hive'
 
 3. Python
 
