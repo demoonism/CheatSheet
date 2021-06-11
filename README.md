@@ -175,6 +175,23 @@ schema = ["Name","Job","Country","salary","seniority"]
 df = spark.createDataFrame(data=datavengers, schema = schema)
 df.printSchema()
 
+option 2
+from pyspark.sql.types import StructType,StructField, StringType, IntegerType
+
+CreatingDataFrame = [
+    ("James","Sales","NY",90000,34,10000),
+    ("Michael","Sales","NY",86000,56,20000)
+  ]
+schema = StructType([ \
+    StructField("employee_name",StringType(),True), \
+    StructField("department",StringType(),True), \
+    StructField("state",StringType(),True), \
+    StructField("salary", IntegerType(), True), \
+    StructField("age", StringType(), True), \
+    StructField("bonus", IntegerType(), True) \
+  ])
+df = spark.createDataFrame(data=CreatingDataFrame,schema=schema)
+
 
 # I/O
 #Read
