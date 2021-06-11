@@ -108,6 +108,7 @@ order by substring(name, -2) asc, id asc
 ```
 
 # String Functions:
+```sql
 CONCAT('hadoop','-','hive') returns 'hadoop-hive'
 CONCAT_WS('-','hadoop','hive') returns 'hadoop-hive'
 FIND_IN_SET('ha','hao,mn,hc,ha,hef') returns 4
@@ -126,6 +127,7 @@ SUBSTR('hadoop',4,2) returns 'oo'
 SUBSTR('hadoop',4) returns 'oop'
 SUBSTR('hadoop',-1) returns 'p'
 TRIM('   hive   ') returns 'hive'
+```
 
 3. Python
 
@@ -157,3 +159,13 @@ wrong: [len(i) for i in data if len(i) > 70 else 0]
 wrong: [len(i) if len(i) > 70 for i in data ]
 
 ```
+
+Pandas set value by condition
+
+```python
+#1 
+df['target'] = 0
+df.loc[condition, 'target'] = 1
+
+#2
+df['target'] = np.where(condition, value, elseValue)
