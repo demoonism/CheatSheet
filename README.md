@@ -22,6 +22,7 @@ lines terminated by '\n'
 stored as TEXTFILE;
 ```
 
+
 Load Data
 
 ```sql
@@ -95,7 +96,21 @@ select cast('2147483648' as bigint);
 select cast('2147483648' as int);
 ```
 
-# Ordering
+Window Function
+
+```sql
+rank()
+row_number()
+
+lag(col, n, default): skip fist n row
+lead(col, n, default): skip last n row
+
+
+SELECT name, month, count, dense_rank() OVER(PARTITION BY name ORDER BY count desc) ranks
+FROM testTable
+
+```
+Ordering
 Order by: global sort
 Sort by: sort within reducer
 Distribute by: define how to partition to reducer, often use with sort by.
@@ -107,7 +122,7 @@ where marks > 75
 order by substring(name, -2) asc, id asc
 ```
 
-# String Functions:
+String Functions:
 ```sql
 CONCAT('hadoop','-','hive') returns 'hadoop-hive'
 CONCAT_WS('-','hadoop','hive') returns 'hadoop-hive'
@@ -129,7 +144,49 @@ SUBSTR('hadoop',-1) returns 'p'
 TRIM('   hive   ') returns 'hive'
 ```
 
-3. Python
+3. Pyspark
+
+```python
+#Create test DF
+
+datavengers = [
+    ["Carol","Data Scientist","USA",70000,5],
+    ["Peter","Data Scientist","USA",90000,7]
+]
+schema = ["Name","Job","Country","salary","seniority"]
+df = spark.createDataFrame(data=datavengers, schema = schema)
+df.printSchema()
+
+
+# I/O
+#Read
+df = spark.read.load("path", format="csv", sep=";", inferSchema="true", header="true")
+df = spark.read.csv("path", inferSchema = True, header = True)
+df = spark.table("hive_access")
+df = spark.sql("select * from hive_access")
+
+Write
+df2.createOrReplaceTempView("test")
+df2.write.saveAsTable("testTable")
+
+
+#Rename
+df2 = df.withColumnRenamed("_c0", 'uname').withColumnRenamed("_c1", 'umonth').withColumnRenamed("_c2", 'ucount')
+
+df3 = df2.groupby(['uname', 'umonth']).sum().withColumnRenamed("sum(ucount)", "num")
+
+df3 = df2.groupby(['uname', 'umonth']).avg("col1", "col2").withColumnRenamed("avg(col1)", "ac1").withColumnRenamed("avg(col2)", "ac2")
+
+df5 = df4.groupBy(["a.uname","a.umonth", "a.num"]).agg(sum('b.num').alias("total"), max('b.num').alias("max"))
+
+#Join
+
+df4 = df3.alias("a").join(df3.alias("b"), df3.name == df3.name, 'inner')
+
+
+```
+
+5. Python
 
 File I/O
 
@@ -169,3 +226,17 @@ df.loc[condition, 'target'] = 1
 
 #2
 df['target'] = np.where(condition, value, elseValue)
+
+```
+
+pandas category
+
+```python
+pd.qcut(col, 5)
+pd.get_dummies(train, columns=["Pclass","Embarked","Sex"])
+```
+
+pandas check null
+```python
+train_df.isnull().sum()
+```
