@@ -19,7 +19,9 @@ create table if not exists hive_access (
 row format delimited
 fields terminated by ','
 lines terminated by '\n'
-stored as TEXTFILE;
+stored as TEXTFILE
+PARTITIONED BY (partition_bin)
+;
 ```
 
 
@@ -44,6 +46,20 @@ create table course (
 
 INSERT INTO course VALUES (1, 1, 'yuwen', 43);
 INSERT INTO course VALUES (2, 1, 'shuxue', 55);
+
+
+INSERT OVERWRITE TABLE non_hive_df PARTITION (partition_bin)
+VALUES (0, 'new_record', 1)
+
+alter table sample_table add partition (day=date '2017-03-03');
+
+
+```
+Write
+
+```sql
+set hive.exec.dynamic.partition=true;
+
 ```
 
 Case When
@@ -202,7 +218,14 @@ df = spark.sql("select * from hive_access")
 
 #Write
 df2.createOrReplaceTempView("test")
+
 df2.write.saveAsTable("testTable")
+df.write.partitionBy('year', 'month').saveAsTable(...)
+df2.write.partitionBy("favorite_color").format("parquet").save("namesPartByColor.parquet")
+
+df2.write.save("namesAndAges.parquet", format="parquet")
+df2.write.parquet("namesAndAges.parquet")
+
 
 #Case
 df.withColumn("shuxue", when(col("course") == 'shuxue', col("score")).otherwise("0")) \
