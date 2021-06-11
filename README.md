@@ -49,11 +49,13 @@ INSERT INTO course VALUES (2, 1, 'shuxue', 55);
 
 
 INSERT OVERWRITE TABLE non_hive_df PARTITION (partition_bin)
-VALUES (0, 'new_record', 1)
+VALUES (0, 'new_record', 1);
 
 alter table sample_table add partition (day=date '2017-03-03');
 
-
+INSERT OVERWRITE TABLE demo_tab PARTITION (land)
+SELECT stadt, geograph_breite, id, t.country
+FROM demo_stg t;
 ```
 Write
 
