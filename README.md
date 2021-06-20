@@ -297,6 +297,12 @@ with open('output.txt', 'w') as file:  # Use file to refer to the file object
     
 ```
 
+String Manipulation
+
+```python
+s.translate(str.maketrans('', '', string.punctuation))
+```
+
 list comprehension
 
 ```python
