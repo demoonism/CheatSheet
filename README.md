@@ -5,6 +5,15 @@
 1. CREATE TABLE
 
 Managed Table
+
+```bash
+aws ecr create-repository --repository-name ukmetprocessor
+docker build -t ukmetprocessor .
+aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 702449819118.dkr.ecr.eu-west-2.amazonaws.com
+docker tag ukmetprocessor:latest 702449819118.dkr.ecr.eu-west-2.amazonaws.com/ukmetprocessor:v1.0.0
+docker push 702449819118.dkr.ecr.eu-west-2.amazonaws.com/ukmetprocessor:v1.0.0
+```
+
 ```sql
 drop table if exists hive_access;
 
